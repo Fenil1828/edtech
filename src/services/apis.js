@@ -1,5 +1,5 @@
 // const BASE_URL = "https://study-notion38-b.vercel.app/api/v1"
-const BASE_URL = "https://studynotion38-b6.onrender.com/api/v1"
+const BASE_URL = "https://edtech-b.vercel.app/api/v1"
 
 
 export const categories = {
