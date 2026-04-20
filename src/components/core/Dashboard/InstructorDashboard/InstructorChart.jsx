@@ -72,21 +72,37 @@ export default function InstructorChart({ courses }) {
       chartRef.current = new Chart(ctx, {
         type: "doughnut",
         data: chartData,
+        plugins: [
+          {
+            id: 'textColorPlugin',
+            afterDraw(chart) {
+              // Force legend text color to white
+              const canvas = chart.canvas;
+              const canvasCtx = canvas.getContext('2d');
+              canvasCtx.fillStyle = '#FFFFFF';
+              canvasCtx.strokeStyle = '#FFFFFF';
+            }
+          }
+        ],
         options: {
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
             legend: {
               position: "right",
+              display: true,
               labels: {
-                color: "#E2E8F0",
+                color: "#FFFFFF",
                 font: {
                   size: 12,
-                  family: "Inter, system-ui, sans-serif"
+                  family: "Inter, system-ui, sans-serif",
+                  weight: "normal"
                 },
                 padding: 20,
                 usePointStyle: true,
                 pointStyle: "circle",
+                boxWidth: 12,
+                boxHeight: 12,
                 generateLabels: function(chart) {
                   const data = chart.data;
                   if (data.labels.length && data.datasets.length) {
@@ -99,7 +115,8 @@ export default function InstructorChart({ courses }) {
                         strokeStyle: dataset.borderColor[i],
                         lineWidth: dataset.borderWidth,
                         hidden: false,
-                        index: i
+                        index: i,
+                        fontColor: "#FFFFFF"
                       };
                     });
                   }
@@ -110,8 +127,8 @@ export default function InstructorChart({ courses }) {
             tooltip: {
               enabled: true,
               backgroundColor: "rgba(0, 0, 0, 0.8)",
-              titleColor: "#E2E8F0",
-              bodyColor: "#E2E8F0",
+              titleColor: "#FFFFFF",
+              bodyColor: "#FFFFFF",
               borderColor: "#4A5568",
               borderWidth: 1,
               callbacks: {
@@ -169,8 +186,19 @@ export default function InstructorChart({ courses }) {
   }
 
   return (
-    <div className="w-full h-full relative text-white">
-      <canvas ref={canvasRef} className="max-w-full max-h-full text-white" />
+    <div className="w-full h-full relative text-white" style={{ color: '#FFFFFF' }}>
+      <canvas ref={canvasRef} className="max-w-full max-h-full text-white" style={{ color: '#FFFFFF' }} />
+      <style>{`
+        .chartjs-legend {
+          color: #FFFFFF !important;
+        }
+        .chartjs-legend li label {
+          color: #FFFFFF !important;
+        }
+        canvas {
+          color: #FFFFFF !important;
+        }
+      `}</style>
     </div>
   );
 }
