@@ -24,7 +24,7 @@ export default function EditCourse() {
             }
             setLoading(false)
         })()
-    }, [])
+    }, [courseId, token, dispatch])
 
 
     if(loading){

@@ -28,7 +28,7 @@ const EnrolledCourses = () => {
         console.log("Could not fetch enrolled coursees")
       }
     })()
-  } ,[])
+  } ,[token])
 
   return (
     <div>
