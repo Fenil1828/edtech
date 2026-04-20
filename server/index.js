@@ -26,14 +26,16 @@ const PORT = process.env.PORT || 4000;
 
 /* ================= MIDDLEWARE ================= */
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cookieParser());
 
 app.use(
   cors({
-    origin: true,
+    origin: [process.env.CLIENT_URL, "http://localhost:3000", "https://study-notion-f1-silk.vercel.app"],
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
 
@@ -41,6 +43,7 @@ app.use(
   fileUpload({
     useTempFiles: true,
     tempFileDir: "/tmp",
+    limits: { fileSize: 50 * 1024 * 1024 }, // 50MB file size limit
   })
 );
 

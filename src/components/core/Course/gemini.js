@@ -1,6 +1,6 @@
 // gemini.js - Uses backend Groq API only
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:4000/api/v1";
+const BASE_URL = process.env.REACT_APP_BASE_URL || "https://edtech-b.vercel.app/api/v1";
 
 export async function generateGeminiResponse(prompt) {
   try {

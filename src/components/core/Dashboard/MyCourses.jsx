@@ -1631,18 +1631,21 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { fetchInstructorCourses } from '../../../services/operations/courseDetailsAPI';
+import { fetchInstructorCourses, deleteCourse } from '../../../services/operations/courseDetailsAPI';
 import IconBtn from '../../common/IconBtn';
 import { VscAdd } from 'react-icons/vsc';
 import { FiEdit, FiTrash2 } from 'react-icons/fi';
 import { FaClock, FaRupeeSign } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+import toast from 'react-hot-toast';
 
 const MyCourses = () => {
   const { token } = useSelector(state => state.auth);
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deleteModal, setDeleteModal] = useState({ isOpen: false, courseId: null, courseName: '' });
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -1683,8 +1686,25 @@ const MyCourses = () => {
   };
 
   const handleDeleteCourse = courseId => {
-    console.log('Deleting course:', courseId);
-    setCourses(prev => prev.filter(c => c._id !== courseId));
+    const course = courses.find(c => c._id === courseId);
+    setDeleteModal({ 
+      isOpen: true, 
+      courseId: courseId, 
+      courseName: course?.courseName 
+    });
+  };
+
+  const confirmDelete = async () => {
+    setDeleting(true);
+    try {
+      await deleteCourse({ courseId: deleteModal.courseId }, token);
+      setCourses(prev => prev.filter(c => c._id !== deleteModal.courseId));
+      setDeleteModal({ isOpen: false, courseId: null, courseName: '' });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setDeleting(false);
+    }
   };
 
   if (loading) return (
@@ -1694,6 +1714,54 @@ const MyCourses = () => {
   );
 
   return (
+    <>
+      {/* Delete Confirmation Modal */}
+      {deleteModal.isOpen && (
+        <motion.div 
+          className="fixed inset-0 z-[1000] flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <motion.div 
+            className="bg-richblack-800 rounded-lg p-6 border border-richblack-600 max-w-md w-full mx-4"
+            initial={{ scale: 0.95, y: -20 }}
+            animate={{ scale: 1, y: 0 }}
+            exit={{ scale: 0.95, y: -20 }}
+          >
+            <h2 className="text-2xl font-bold text-richblack-5 mb-4">Delete Course</h2>
+            <p className="text-richblack-300 mb-6">
+              Are you sure you want to delete <span className="font-semibold text-yellow-100">"{deleteModal.courseName}"</span>? 
+              This action cannot be undone.
+            </p>
+            <div className="flex gap-3 justify-end">
+              <button 
+                onClick={() => setDeleteModal({ isOpen: false, courseId: null, courseName: '' })}
+                disabled={deleting}
+                className="px-4 py-2 rounded-lg bg-richblack-700 text-richblack-100 hover:bg-richblack-600 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={confirmDelete}
+                disabled={deleting}
+                className="px-4 py-2 rounded-lg bg-pink-600 text-white hover:bg-pink-700 disabled:opacity-50 flex items-center gap-2"
+              >
+                {deleting ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white"></div>
+                    Deleting...
+                  </>
+                ) : (
+                  'Delete'
+                )}
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+
+      {/* Main Content */}
     <div className="p-4 md:p-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <motion.h1 initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-2xl md:text-3xl font-bold text-richblack-5">
@@ -1834,6 +1902,7 @@ const MyCourses = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 
