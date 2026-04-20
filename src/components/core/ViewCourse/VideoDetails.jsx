@@ -164,7 +164,7 @@ const VideoDetails = () => {
     { courseId: courseId, subsectionId: subSectionId },
       token
     )
-    console.log("handle lecture res is : " , handleLectureCompletion)
+    console.log("handle lecture res is : " , res)
     if (res) {
       dispatch(updateCompletedLectures(subSectionId))
     }
@@ -200,6 +200,15 @@ const VideoDetails = () => {
               }}
               className="full absolute inset-0 z-[100] grid h-full place-content-center font-inter"
             >
+              {/* Mobile Close Button - Top Right */}
+              <button
+                onClick={() => setVideoEnded(false)}
+                className="absolute top-4 right-4 md:hidden text-white text-2xl hover:text-yellow-5 transition"
+                aria-label="Close"
+              >
+                ×
+              </button>
+              
               {!completedLectures.includes(subSectionId) && (
                 <IconBtn
                   disabled={loading}

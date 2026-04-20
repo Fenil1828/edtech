@@ -731,7 +731,7 @@ exports.getFullCourseDetails = async (req, res) => {
     .exec()
 
     let courseProgressCount = await CourseProgress.findOne({
-      courseId: courseId,
+      courseID: courseId,
       userId: userId
     })
 
