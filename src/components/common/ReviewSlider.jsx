@@ -70,8 +70,8 @@ function ReviewSlider() {
 
 
   return (
-    <div className="text-white">
-      <div className="my-[50px] max-w-maxContentTab lg:max-w-maxContent">
+    <div className="text-white w-full">
+      <div className="my-8 sm:my-12 md:my-[50px] w-full px-3 sm:px-4 md:px-0 max-w-full sm:max-w-maxContentTab lg:max-w-maxContent mx-auto">
         {loading && (
           <div className="flex items-center justify-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-50"></div>
@@ -91,7 +91,7 @@ function ReviewSlider() {
         )}
 
         {reviews.length > 0 && !loading && (
-          <div className="h-[184px]">
+          <div className="h-auto sm:h-[200px] md:h-[200px] lg:h-[220px] xl:h-[184px] px-2 sm:px-0">
             <Swiper
               slidesPerView={4}
               spaceBetween={25}
@@ -102,14 +102,22 @@ function ReviewSlider() {
                 disableOnInteraction: false,
               } : false}
               modules={[FreeMode, Pagination, Autoplay]}
-              className="w-full "
+              className="w-full px-1"
               breakpoints={{
                 320: {
                   slidesPerView: 1,
+                  spaceBetween: 8,
+                },
+                480: {
+                  slidesPerView: 1.2,
                   spaceBetween: 10,
                 },
                 640: {
                   slidesPerView: 2,
+                  spaceBetween: 12,
+                },
+                768: {
+                  slidesPerView: 2.5,
                   spaceBetween: 15,
                 },
                 1024: {
@@ -117,6 +125,10 @@ function ReviewSlider() {
                   spaceBetween: 20,
                 },
                 1280: {
+                  slidesPerView: 3.5,
+                  spaceBetween: 22,
+                },
+                1536: {
                   slidesPerView: 4,
                   spaceBetween: 25,
                 },
@@ -125,8 +137,8 @@ function ReviewSlider() {
               {reviews.map((review, i) => {
                 return (
                   <SwiperSlide key={i}>
-                    <div className="flex flex-col gap-3 bg-richblack-800 p-3 text-[14px] text-richblack-25 rounded-lg h-full">
-                      <div className="flex items-center gap-4">
+                    <div className="flex flex-col gap-2 sm:gap-3 bg-richblack-800 p-2 sm:p-3 md:p-4 text-xs sm:text-sm md:text-sm text-richblack-25 rounded-lg h-full">
+                      <div className="flex items-center gap-2 sm:gap-3">
                         <img
                           src={
                             review?.user?.image
@@ -134,16 +146,16 @@ function ReviewSlider() {
                               : `https://api.dicebear.com/5.x/initials/svg?seed=${review?.user?.firstName} ${review?.user?.lastName}`
                           }
                           alt={review?.user?.firstName}
-                          className="h-9 w-9 rounded-full object-cover"
+                          className="h-7 w-7 sm:h-9 sm:w-9 rounded-full object-cover flex-shrink-0"
                         />
-                        <div className="flex flex-col">
-                          <h1 className="font-semibold text-richblack-5 text-sm">{`${review?.user?.firstName} ${review?.user?.lastName}`}</h1>
-                          <h2 className="text-[12px] font-medium text-richblack-500 truncate">
+                        <div className="flex flex-col min-w-0">
+                          <h1 className="font-semibold text-richblack-5 text-xs sm:text-sm truncate">{`${review?.user?.firstName} ${review?.user?.lastName}`}</h1>
+                          <h2 className="text-[10px] sm:text-[12px] font-medium text-richblack-500 truncate">
                             {review?.course?.courseName}
                           </h2>
                         </div>
                       </div>
-                      <p className="font-medium text-richblack-25 line-clamp-3">
+                      <p className="font-medium text-richblack-25 line-clamp-2 sm:line-clamp-3 text-xs sm:text-sm leading-snug">
                         {review?.review.split(" ").length > truncateWords
                           ? `${review?.review
                               .split(" ")
@@ -151,14 +163,14 @@ function ReviewSlider() {
                               .join(" ")} ...`
                           : `${review?.review}`}
                       </p>
-                      <div className="flex items-center gap-2 mt-auto">
-                        <h3 className="font-semibold text-yellow-100 text-sm">
+                      <div className="flex items-center gap-1 sm:gap-2 mt-auto">
+                        <h3 className="font-semibold text-yellow-100 text-xs sm:text-sm">
                           {review?.rating?.toFixed(1) || 0}
                         </h3>
                         <ReactStars
                           count={5}
                           value={review?.rating || 0}
-                          size={16}
+                          size={14}
                           edit={false}
                           activeColor="#ffd700"
                           emptyIcon={<FaStar />}
